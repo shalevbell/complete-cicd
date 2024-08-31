@@ -14,7 +14,8 @@ BG_COLOR = environ.get('BG_COLOR', '#e6dabc') # Set bg as env variable BG_COLOR
 def search():
     if request.method == 'POST':
         button = request.form.get('submit_button')
-        
+        print("Submit button pressed:", button)
+
         if button == 'history':
             # Retrieve list of history files
             history_files = [
@@ -25,16 +26,21 @@ def search():
         
         elif button == 'check':
             location = request.form.get('input_location')
+            print("Location is:", location)
             try:
                 # Convert location to dictionary and save to file
                 location_dict = location_to_dict(location)
-                file_path = f'static/history/{location}:{date.today()}.json'
+
+                file_path = os.path.join('static/history/', f'{location}-{date.today()}.json')
                 with open(file_path, 'w') as outfile:
                     json.dump(location_dict, outfile, indent=4)
-                
+
+                print("location_dict is:", location_dict)
+
                 return render_template('weather_main.html', location_dict=location_dict, bg=BG_COLOR)
-            except TypeError:
+            except Exception as e:
                 # Handle invalid location
+                print(e)
                 return render_template('weather_error.html', bg=BG_COLOR)
 
     return render_template('weather_search.html', bg=BG_COLOR)

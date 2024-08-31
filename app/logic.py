@@ -34,28 +34,29 @@ def api_to_dict(api_data: requests.Response):
         raise ValueError("Invalid JSON response from API")
     
     today = datetime.today().strftime('%A')  # today's date.
-    days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", ]
-    i = days.index(today)
-    days = days[i:] + days[:i]
+    d = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", ]
+    i = d.index(today)  # the index of today's date.
+    days = d[i:]  # select all days from before today.
+    days.extend((d[:i]))  # append all the days to the end of the list.
 
-    data_dict = {
-        "c_location": data["resolvedAddress"],
-        "c_temp": data["currentConditions"]["temp"],
-        "c_humidity": data["currentConditions"]["humidity"],
-        "c_uv": data["currentConditions"]["uvindex"],
-        "c_sunrise": data["currentConditions"]["sunrise"],
-        "c_sunset": data["currentConditions"]["sunset"],
-        "c_description": data["currentConditions"]["conditions"]
-    }
+    try:  # Tries to access the data as a json, if not a valid location raises an error.
+        data_dict = {
+            "c_location": api_data.json()["resolvedAddress"],
+            "c_temp": api_data.json()["currentConditions"]["temp"],
+            "c_humidity": api_data.json()["currentConditions"]["humidity"],
+            "c_uv": api_data.json()["currentConditions"]["uvindex"],
+            "c_sunrise": api_data.json()["currentConditions"]["sunrise"],
+            "c_sunset": api_data.json()["currentConditions"]["sunset"],
+            "c_description": api_data.json()["currentConditions"]["conditions"]
+        }
+    except:
+        raise TypeError
 
-    for x in range(7):
-        day_data = data["days"][x]
-        data_dict[days[x]] = (
-            day_data["hours"][11]["temp"], 
-            day_data["hours"][23]["temp"]
-        )
-
-    return day_data
+    for x in range(7):  # Updates dict with temp in day and night for each day of the week.
+        data_dict.update({
+            days[x]: (api_data.json()["days"][x]["hours"][11]["temp"], api_data.json()["days"][x]["hours"][23]["temp"])
+        })
+    return data_dict
 
 
 def location_to_dict(location):
