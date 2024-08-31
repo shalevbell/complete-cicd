@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} {% endblock %}</title>
+    <style>
+        body {
+            background-color: {{bg}};
+        }
+        nav h1 {
+            color: #6EB7CD;
+            font-size: 3em;
+            margin: auto;
+        }
+        button{
+             background-color: #555;
+             color: #fff;
+             border-radius: 10px;
+         }
+        table{
+            width: 100%;
+            border: thin solid black;
+        }
+          tr:nth-child(even) {
+             background-color: rgba(150, 212, 212, 0.4);
+        }
+
+        th:nth-child(even),td:nth-child(even) {
+            background-color: rgba(150, 212, 212, 0.4);
+        }
+        input{
+            border: 1px solid #1e90b2;
+            background-color: #6EB7CD;
+        }
+        div {
+             border: 4px solid #1e90b2;
+             padding: 10px;
+             margin: 5px;
+         }
+         .content{
+            color: #1e90b2;
+            margin: 5px;
+            text-align: center;
+         }
+         h4, th{
+            color: 6EB7CD;
+            padding: 5px;
+         }
+
+
+    </style>
+</head>
+<body>
+    <div class="content">
+    <nav>
+        <h1>Weather app</h1>
+    </nav>
+    <hr>
+        <h1>Enter your location:</h1>
+    <form method="post">
+        <label>location:</label>
+        <br><br>
+        <input type="text" name="input_location" placeholder="Enter location"/>
+        <br><br>
+        <input type="submit" name="submit_button" value="check">
+        <input type="submit" name="submit_button" value="history">
+    </form>
+    {% block content %} {% endblock %}
+    </div>
+</body>
+</html>

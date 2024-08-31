@@ -1,0 +1,31 @@
+{% extends 'weather_base.html' %}
+    {% block title %} {{location_dict['c_location']}} {% endblock %}
+{% block content %}
+<div>
+    <h4>Today's weather: </h4>
+    <h4>location: {{ location_dict["c_location"] }}</h4>
+    <h4>Temp: {{ location_dict["c_temp"] }} °C</h4>
+    <h4>Humidity: {{ location_dict["c_humidity"] }}%</h4>
+    <h4>UV Levels: {{ location_dict["c_uv"] }}</h4>
+    <h4>Sunrise: {{ location_dict["c_sunrise"] }}</h4>
+    <h4>Sunset: {{ location_dict["c_sunset"] }}</h4>
+    <h4>Current description: {{location_dict["c_description"]}}</h4>
+</div>
+<table>
+  <tr>
+      {% for i in ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", ]%}
+      <th> {{ i }} </th>
+      {% endfor %}
+  </tr>
+  <tr>
+      {% for i in ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", ]%}
+            <td>{{location_dict[i][0]}} °C</td>
+      {% endfor %}
+  </tr>
+  <tr>
+      {% for i in ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", ] %}
+      <td>{{location_dict[i][1]}} °C</td>
+      {% endfor %}
+  </tr>
+</table>
+{% endblock %}
