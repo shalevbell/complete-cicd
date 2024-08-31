@@ -1,0 +1,11 @@
+{% extends 'weather_base.html' %}
+    {% block title %} Weather history {% endblock %}
+{% block content %}
+    <h1>Download weather history</h1>
+    {% for i in history %}
+        <a href="/app/static/history/{{ i }}" download>
+             <input type="submit" name="submit_button" value="{{i}}">
+        </a>
+    <br><br>
+    {% endfor %}
+{% endblock %}
