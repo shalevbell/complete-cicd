@@ -7,11 +7,11 @@ from logic import *
 
 weather_app = Flask(__name__)  # create a new application instance called weather_app.
 
-BG_COLOR = environ.get('BG_COLOR', '#e6dabc') # Set bg as env variable BG_COLOR
-
-
 @weather_app.route('/', methods=('GET', 'POST'))  # Sets an app rout and gives it GET & POST methods.
 def search():
+    
+    BG_COLOR = environ.get('BG_COLOR', '#e6dabc') # Set bg as env variable BG_COLOR
+
     if request.method == 'POST':
         button = request.form.get('submit_button')
         print("Submit button pressed:", button)
