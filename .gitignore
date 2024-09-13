@@ -1,0 +1,14 @@
+env/
+__pycache__/
+*.py[cod]
+*.log
+.env
+*.pyo
+*.pyd
+*.pdb
+htmlcov/
+coverage.xml
+*.cover
+.hypothesis/
+.tox/
+.pytest_cache/
