@@ -20,7 +20,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.8'
 
@@ -50,7 +50,7 @@ jobs:
         run: |
           HUB_RESPONSE=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
           TAG=$(echo $HUB_RESPONSE | jq -r '.results | map(.name) | sort | last')
-          echo "Current docker tag: $TAG"
+          echo "Current tag: $TAG"
           
           if [[ -z "$TAG" ]]; then
             TAG=1.0
@@ -63,7 +63,13 @@ jobs:
 
           echo "tag=$NEW_TAG" >> $GITHUB_ENV
 
-      - name: Print new tag version
+      - name: Build and save Docker image
         run: |
-          echo ${tag}
-          printenv
+          docker build -t $IMAGE_NAME:${tag} .
+          docker save $IMAGE_NAME:${tag} -o weatherImage.tar
+  
+      - name: Artifact image for upload job 
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-image
+          path: weatherImage.tar
