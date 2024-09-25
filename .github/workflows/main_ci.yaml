@@ -12,6 +12,9 @@ jobs:
   main_tests:
     runs-on: ubuntu-latest
 
+    env:
+      REQ_FILE: app/requirements.txt
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -23,8 +26,35 @@ jobs:
 
     - name: Install dependencies with pip
       run: |
-        pip install -r app/requirements.txt
+        echo "Requirements to be downloaded:"
+        cat $REQ_FILE
+        pip install -r $REQ_FILE
 
     - name: Run tests
       run: |
         python -m unittest discover -s tests
+
+  build:
+    runs-on: ubuntu-latest
+    needs: main_tests
+    if: success()
+    
+    env:
+      IMAGE_NAME: shalevbell/weatherapp
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set next image tag
+        id: get-tag
+        run: |
+          TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags" | jq -r '.[].name' | sort -V | tail -n 1)
+          if [[ -z "$TAG" ]]; then
+            TAG=0
+          fi
+          NEW_TAG=$((TAG + 1))
+          echo "::set-output name=tag::$NEW_TAG"
+
+      - name: Print new tag version
+        run: |
+          echo ${{ steps.get-tag.outputs.tag }}
