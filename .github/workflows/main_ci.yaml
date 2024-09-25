@@ -23,11 +23,8 @@ jobs:
 
     - name: Install dependencies with pip
       run: |
-        python -m venv venv
-        source venv/bin/activate
         pip install -r app/requirements.txt
 
     - name: Run tests
       run: |
-        source venv/bin/activate
         python -m unittest discover -s tests
