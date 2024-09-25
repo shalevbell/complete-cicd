@@ -5,7 +5,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /app
 
-COPY . /app
+COPY app/. .
 RUN pip install --no-cache-dir -r requirements.txt && mkdir -p /app/static/history
 
 EXPOSE 9090
