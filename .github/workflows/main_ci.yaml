@@ -48,13 +48,19 @@ jobs:
       - name: Set next image tag
         id: get-tag
         run: |
-          TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags" | jq -r '.[].name' | sort -V | tail -n 1)
+          HUB_RESPONSE=$(curl -sv "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
+          TAG=$(echo $HUB_RESPONSE | jq -r '.results | map(.name) | sort | last')
+          
           if [[ -z "$TAG" ]]; then
-            TAG=0
+            TAG=1.0
           fi
-          NEW_TAG=$((TAG + 1))
-          echo "::set-output name=tag::$NEW_TAG"
+
+          IFS='.' read -r major minor <<< "$TAG"
+          new_minor=$((minor + 1))
+          NEW_TAG="${major}.${new_minor}"
+
+          echo "tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Print new tag version
         run: |
-          echo ${{ steps.get-tag.outputs.tag }}
+          echo ${tag}
