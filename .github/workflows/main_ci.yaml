@@ -47,7 +47,6 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set next image tag
-        id: get-tag
         run: |
           HUB_RESPONSE=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
           TAG=$(echo $HUB_RESPONSE | jq -r '.results | map(.name) | sort | last')
@@ -75,4 +74,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${env.imageName}
+          tags: ${{ env.imageName }}
