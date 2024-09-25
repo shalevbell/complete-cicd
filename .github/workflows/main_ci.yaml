@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -43,13 +43,14 @@ jobs:
       IMAGE_NAME: shalevbell/weatherapp
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set next image tag
         id: get-tag
         run: |
-          HUB_RESPONSE=$(curl -sv "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
+          HUB_RESPONSE=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
           TAG=$(echo $HUB_RESPONSE | jq -r '.results | map(.name) | sort | last')
+          echo "Current docker tag: $TAG"
           
           if [[ -z "$TAG" ]]; then
             TAG=1.0
@@ -58,9 +59,11 @@ jobs:
           IFS='.' read -r major minor <<< "$TAG"
           new_minor=$((minor + 1))
           NEW_TAG="${major}.${new_minor}"
+          echo "New tag: $NEW_TAG"
 
           echo "tag=$NEW_TAG" >> $GITHUB_ENV
 
       - name: Print new tag version
         run: |
           echo ${tag}
+          printenv
