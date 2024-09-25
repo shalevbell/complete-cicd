@@ -41,7 +41,7 @@ def api_to_dict(api_data: requests.Response):
 
     try:  # Tries to access the data as a json, if not a valid location raises an error.
         data_dict = {
-            "c_location": api_data.json()["resolvedAddress"],
+            "c_lcation": api_data.json()["resolvedAddress"],
             "c_temp": api_data.json()["currentConditions"]["temp"],
             "c_humidity": api_data.json()["currentConditions"]["humidity"],
             "c_uv": api_data.json()["currentConditions"]["uvindex"],
