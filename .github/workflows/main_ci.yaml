@@ -46,12 +46,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set next image tag
+      - name: Get current image tag
         run: |
-          HUB_RESPONSE=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags")
+          if ! HUB_RESPONSE=$(curl -s "https://registry.hub.docker.com/v2/repositories/${IMAGE_NAME}/tags"); then
+            echo "Error: Failed to retrieve current version."
+            exit 1
+          fi
           TAG=$(echo $HUB_RESPONSE | jq -r '.results | map(.name) | sort | last')
+
           echo "Current tag: $TAG"
-          
+          echo "CurrentTag=$TAG" >> $GITHUB_ENV
+
           if [[ -z "$TAG" ]]; then
             TAG=1.0
           fi
@@ -59,6 +64,27 @@ jobs:
           IFS='.' read -r major minor <<< "$TAG"
           new_minor=$((minor + 1))
           NEW_TAG="${major}.${new_minor}"
+          echo "New tag: $NEW_TAG"
+
+          echo "imageName=$IMAGE_NAME:$NEW_TAG" >> $GITHUB_ENV
+      
+      - name: Increment image tag
+        run: |
+          IFS='.' read -r major minor patch <<< "${{env.CurrentTag}}"
+          latest_commit_message="${{ github.event.head_commit.message }}"
+
+          if [[ $commit_message == *"(major!)"* ]]; then
+            major=$((major + 1))
+            minor=0
+            patch=0
+          elif [[ $commit_message == *"(minor!)"* ]]; then
+            minor=$((minor + 1))
+            patch=0
+          else
+            patch=$((patch + 1))
+          fi
+
+          NEW_TAG="${major}.${minor}.${patch}"
           echo "New tag: $NEW_TAG"
 
           echo "imageName=$IMAGE_NAME:$NEW_TAG" >> $GITHUB_ENV
