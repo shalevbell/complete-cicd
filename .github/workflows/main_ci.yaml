@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - master
+    paths: ['app/**', 'tests/**', 'dockerfile']
+    
   pull_request:
     branches:
       - master
+    paths: ['app/**', 'tests/**', 'dockerfile']
 
 jobs:
   main_tests:
