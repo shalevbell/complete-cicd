@@ -73,11 +73,11 @@ jobs:
           IFS='.' read -r major minor patch <<< "${{env.CurrentTag}}"
           latest_commit_message="${{ github.event.head_commit.message }}"
 
-          if [[ $commit_message == *"(#major)"* ]]; then
+          if [[ $latest_commit_message == *"(major)"* ]]; then
             major=$((major + 1))
             minor=0
             patch=0
-          elif [[ $commit_message == *"(#minor)"* ]]; then
+          elif [[ $latest_commit_message == *"(minor)"* ]]; then
             minor=$((minor + 1))
             patch=0
           else
