@@ -12,3 +12,5 @@ coverage.xml
 .hypothesis/
 .tox/
 .pytest_cache/
+.terraform/
+.terraform.lock.hcl
