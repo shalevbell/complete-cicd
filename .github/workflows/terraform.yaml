@@ -23,8 +23,14 @@ jobs:
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: "1.9.6"
+
+    - name: Terraform Init
+      working-directory: infra/terraform
+      run: |
+          terraform init -input=false
     
     - name: Validate
+      working-directory: infra/terraform
       run: |
         echo "Validating tf code"
         terraform validate
