@@ -43,6 +43,8 @@ jobs:
         image: shalevbell/weatherapp:E2E_Tests
         ports:
           - 9090:9090
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
         options: >-
           --health-cmd "curl --fail http://localhost:9090/ || exit 1"
           --health-interval 30s
