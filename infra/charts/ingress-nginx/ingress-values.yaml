@@ -1,0 +1,26 @@
+controller:
+  extraArgs:
+    update-status: 'true'
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+      service.beta.kubernetes.io/aws-load-balancer-type: external
+      service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: >-
+        name=ingress-nginx
+
+
+  config:
+    allow-snippet-annotations: 'true'
+    dynamic-configuration: 'true'
+    enable-underscores-in-headers: 'true'
+    keep-alive: '7200'
+    keep-alive-requests: '7200'
+    keepalive-timeout: '7200'
+    proxy-connect-timeout: '90'
+    proxy-next-upstream-timeout: '7200'
+    proxy-next-upstream-tries: '2'
+    proxy-read-timeout: '7200'
+    proxy-send-timeout: '7200'
+    proxy-socket-keepalive: 'on'
+    use-forwarded-headers: 'true'
+    worker-shutdown-timeout: 1200s
