@@ -54,6 +54,9 @@ jobs:
 
     - name: Add ingress-nginx
       run: |
+        pwd
+        ls
+        ls -al ./infra/charts/
         cd ./infra/charts/ingress-nginx
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm repo update
