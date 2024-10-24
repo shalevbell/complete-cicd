@@ -17,10 +17,11 @@ provider "aws" {
 }
 
 module "app" {
-  source         = "../weatherapp_module"
-  region         = var.region
-  cluster_name   = var.cluster_name
-  desired_size   = var.desired_size
-  max_size       = var.max_size
-  min_size       = var.min_size
+  source          = "../weatherapp_module"
+  region          = var.region
+  cluster_name    = var.cluster_name
+  desired_size    = var.desired_size
+  max_size        = var.max_size
+  min_size        = var.min_size
+  cluster_version = var.cluster_version
 }
