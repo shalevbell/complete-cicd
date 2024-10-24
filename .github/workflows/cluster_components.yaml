@@ -53,7 +53,7 @@ jobs:
         helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=${{ env.cluster_name }} --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=${{ env.region }} --set vpcId=$(aws ec2 describe-vpcs --filters "Name=isDefault,Values=true" --query "Vpcs[0].VpcId" --output text)
 
     - name: Add ingress-nginx
-      working-directory: ./infra/charts/ingress-nginx
+      working-directory: infra/charts/ingress-nginx
       run: |
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm repo update
