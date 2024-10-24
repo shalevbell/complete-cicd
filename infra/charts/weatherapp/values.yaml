@@ -1,0 +1,14 @@
+replicaCount: 1
+ingress_lb: ""
+api_key: ""
+
+image:
+  repository: shalevbell/weatherapp
+  tag: ""
+  pullPolicy: IfNotPresent
+
+app:
+  service:
+    type: ClusterIP
+    port: 9090
+    targetPort: 9090
