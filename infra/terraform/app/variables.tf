@@ -3,6 +3,11 @@ variable "region" {
   type        = string
 }
 
+variable "cluster_version" {
+  description = "EKS cluster version"
+  type        = string
+}
+
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
