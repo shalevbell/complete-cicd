@@ -45,6 +45,14 @@ resource "aws_security_group" "eks_cluster" {
     self        = true
   }
 
+  ingress {
+    description = "Allow coredns 443"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    self        = true
+  }
+
   # kubelet communication
   ingress {
     description = "Allow kubelet communication"

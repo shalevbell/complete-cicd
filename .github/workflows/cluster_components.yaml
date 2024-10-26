@@ -45,7 +45,6 @@ jobs:
     - name: Add aws Load balancer controller
       run: |
         eksctl utils associate-iam-oidc-provider --region=${{ env.region }} --cluster=${{ env.cluster_name }} --approve
-        eksctl delete iamserviceaccount --cluster=${{ env.cluster_name }} --namespace=kube-system --name=aws-load-balancer-controller
         eksctl create iamserviceaccount --cluster=${{ env.cluster_name }} --namespace=kube-system --name=aws-load-balancer-controller --role-name AmazonEKSLoadBalancerControllerRole --attach-policy-arn=$(aws iam list-policies --query "Policies[?PolicyName=='LoadBalancerPolicy'].Arn" --output text) --approve --override-existing-serviceaccounts
 
         helm repo add eks https://aws.github.io/eks-charts
@@ -58,3 +57,10 @@ jobs:
         helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
         helm repo update
         helm upgrade --install ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --namespace ingress-nginx --create-namespace -f ingress-values.yaml
+
+    - name: Add argo-cd
+      run: |
+        helm repo add argo-cd https://argoproj.github.io/argo-helm
+        helm repo update
+        helm upgrade --install argocd argo/argo-cd --create-namespace --namespace argocd
+            
