@@ -62,6 +62,23 @@ resource "aws_security_group" "eks_nodes" {
   }
 }
 
+resource "aws_launch_template" "eks_nodes" {
+  name = "${var.cluster_name}-node-template"
+  description = "Launch template for EKS worker nodes"
+
+  vpc_security_group_ids = [aws_security_group.eks_nodes.id]
+  
+  key_name = "shalevWeatherapp"
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "${var.cluster_name}-node"
+    }
+  }
+
+  depends_on = [aws_security_group.eks_nodes]
+}
 
 resource "aws_eks_node_group" "nodegroup" {
   cluster_name    = aws_eks_cluster.cluster.name
@@ -69,9 +86,9 @@ resource "aws_eks_node_group" "nodegroup" {
   node_role_arn   = aws_iam_role.eks_node_group_role.arn
   subnet_ids      = data.aws_subnets.default_subnets.ids
   
-  remote_access {
-    ec2_ssh_key  = "shalevWeatherapp"
-    source_security_group_ids = [aws_security_group.eks_nodes.id]
+  launch_template {
+    id      = aws_launch_template.eks_nodes.id
+    version = aws_launch_template.eks_nodes.latest_version
   }
   
   scaling_config {
@@ -80,7 +97,10 @@ resource "aws_eks_node_group" "nodegroup" {
     min_size     = var.min_size
   }
 
-  depends_on = [aws_security_group.eks_nodes] 
+  depends_on = [
+    aws_launch_template.eks_nodes,
+    aws_security_group.eks_nodes
+  ]
 
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]
